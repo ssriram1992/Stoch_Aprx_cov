@@ -1,0 +1,4 @@
+Files and their use
+data.gms          - Data and model
+Simple_Nangam.gms - to run it under normal conditions
+Supply_price.gms  - Calibrate supply price
