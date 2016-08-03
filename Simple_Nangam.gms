@@ -25,7 +25,7 @@ $SETGLOBAL out_dir "./"
 
 *** SOLVING OPTIONS
 * Set this as "*" to solve without the golembek term
-$SETGLOBAL noGolembek "*"
+$SETGLOBAL noGolembek ""
 
 * Set this as "*" to presolve without golembek and then introduce Golembek
 $SETGLOBAL presolve ""
@@ -46,35 +46,17 @@ $inlinecom /* */
 option solveopt=merge ;
 $ontext
 $offtext
-Scalar epsilon /0.00001/;
 
+option solvelink=5;
 $INCLUDE ./data.gms
 
-
-LossP(P,Y) = 0.0;
-Qp0(P) = 100;
-
-LossA(N0,NN0,Y)$(Ao(N0,NN0)) = 0.0;
-
-PIXP(P,Y) = 2;
-PIXA(N0,NN0,'2015')$(Ao(N0,NN0)) = 3;
-
-df('2015') = 1.000;
-
-* Inflation in production and storage expansion
-Loop(Y,
-    PIXP(P,Y+1)=PIXP(P,Y)+0.5;
-    PIXA(N0,NN0,Y+1)$(Ao(N0,NN0))=PIXA(N0,NN0,Y)$(Ao(N0,NN0))+0.3;
-    CostA(N0,NN0,Y+1)$(Ao(N0,NN0)) = CostA(N0,NN0,Y)$(Ao(N0,NN0));
-    df(Y+1) = df(Y)*0.95;
-    );
+CAPpy.L(P,Y) = Qp0(P);
+Qpy.L(P,Y) = CAPpy.L(P,Y)*avl;
 
 
-CAPpy.L(P,Y) = Qp0(P)      ;
-Qpy.L(P,Y) = CAPpy.L(P,Y)/2 ;
-
-$If exist ./auxi/loadpoint.gdx %no_init% execute_loadpoint './auxi/loadpoint.gdx'
-%no_init%   d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
+$If exist ./auxi/loadpoint.gdx %no_init% execute_loadpoint './auxi/loadpoint.gdx' d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
+*d1.L(P,Y),d2.L(P,Y),d3.L(P,N,Y),d4.L(P,Y),Qpcny.L(P,C,Y),Xpy.L(P,Y),Qpay.L(P,N0,NN0,Y),Qpy.L(P,Y),CAPpy.L(P,Y),d5.L(N0,NN0,Y),d6.L(N0,NN0,Y),Qay.L(N0,NN0,Y),Xay.L(N0,NN0,Y),CAPay.L(N0,NN0,Y),PIay.L(N0,NN0,Y),PIcy.L(C,Y);
+%no_init%
 
 %no_init%Qpy.L(P,Y)$(Qpy.L(P,Y) > CAPpy.L(P,Y)) = CAPpy.L(P,Y);
 
@@ -94,6 +76,8 @@ Solve Sim_Nangam using MCP;
 CostG(P,Y) = CostG_copy(P,Y);
 $ontext
 $offtext
+
+
 
 option MCP=PATH;
 Solve Sim_Nangam using MCP;
@@ -142,8 +126,8 @@ f1_7c(N0,NN0,Y) = min( CAPay.L(N0,NN0,Y),d6.L(N0,NN0,Y)-d5.L(N0,NN0,Y));
 f1_8(N0,NN0,Y) = Qay.L(N0,NN0,Y) -sum(P,Qpay.L(P,N0,NN0,Y));
 f1_9(C,Y) = PIcy.L(C,Y) - DemInt(C,Y) + DemSlope(C,Y)*sum(P,Qpcny.L(P,C,Y));
 
-Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
-Display f1_2a,f1_2b,f1_2c,f1_2d,f1_3a,f1_3b,f1_3c,f1_3d,f1_3e,f1_6a,f1_6b,f1_7a,f1_7b,f1_7c,f1_8,f1_9;
+*Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
+*Display f1_2a,f1_2b,f1_2c,f1_2d,f1_3a,f1_3b,f1_3c,f1_3d,f1_3e,f1_6a,f1_6b,f1_7a,f1_7b,f1_7c,f1_8,f1_9;
 
 
 
@@ -153,7 +137,11 @@ Display f1_2a,f1_2b,f1_2c,f1_2d,f1_3a,f1_3b,f1_3c,f1_3d,f1_3e,f1_6a,f1_6b,f1_7a,
 
 execute_unload './auxi/loadpoint.gdx'
 
-$ontext
+Parameters Qcy(C,Y) "Consumed Quantity";
+Qcy(C,Y) = sum(P,Qpcny.L(P,C,Y));
+Display Qcy;
+
+
 file O5out /O6out.gpy/;
 O5out.pw  = 32767;
 put O5out;
@@ -237,7 +225,7 @@ Ca(N,N0)$(Qa(N,N0) gt 0) = CostA(N,N0,'2040')
 Display "2040";
 Display Qpc,  Qa, Ca, Pa;
 Display "-----";
-
+$ontext
 ***2045
 Qpc(P,C) = Qpcny.L(P,C,'2045');
 Qa(N,N0) = Qay.L(N,N0,'2045');
@@ -257,10 +245,11 @@ Display Qpc,  Qa, Ca, Pa;
 Display "-----";
 
 
-Display PIcy.L;
+
 Display "*************************************";
 Display "******* All Variables here **********";
 Display "*************************************";
 
 Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
 $offtext
+Display PIcy.L;

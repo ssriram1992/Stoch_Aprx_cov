@@ -1,3 +1,14 @@
+*******************************************************************************
+Author: Sriram Sankaranarayanan
+File: ReadMe
+Institution: Johns Hopkins University
+Contact: ssankar5@jhu.edu
+
+All rights reserved.
+You are free to distribute this code for non-profit purposes
+as long as this header is kept intact
+*******************************************************************************
+
 Files and their use
 data.gms          - Data and model
 Simple_Nangam.gms - to run it under normal conditions
