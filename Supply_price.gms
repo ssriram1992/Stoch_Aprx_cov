@@ -11,7 +11,7 @@ as long as this header is kept intact
 *******************************************************************************
 $offtext
 
-$SETGLOBAL offlst ""
+$SETGLOBAL offlst "*"
 *option solvelink = 5;
 
 %offlst%$ontext
@@ -68,7 +68,7 @@ E1_9
 *costG(P,Y) = 0;
 
 $If exist ./auxi/supply_cost_init.gdx execute_loadpoint './auxi/supply_cost_init.gdx'
-option NLP = MINOS;
+$INCLUDE ./manual_calib.gms
 Solve supply_price_init using NLP minimizing obj;
 Parameter ref_price_S(C,Y);
 ref_price_S(C,Y) = Dem_Cons.m(C,Y);

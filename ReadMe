@@ -13,3 +13,130 @@ Files and their use
 data.gms          - Data and model
 Simple_Nangam.gms - to run it under normal conditions
 Supply_price.gms  - Calibrate supply price
+
+
+Positions, variables and equations
+0			-		d1		-		e1_2a
+91			-		d2		-		e1_2b
+182			-		d3		-		e1_2c
+1729		-		Qpcny	-		e1_3a
+3276		-		Xpy		-		e1_3b
+3367		-		Qpay	-		e1_3c
+9100		-		Qpy		-		e1_3d
+9191		-		CAPpy	-		e1_3e
+9282		-		d5		-		e1_6a
+9723		-		d6		-		e1_6b
+10164		-		Qay		-		e1_7a
+10605		-		Xay		-		e1_7b
+11046		-		CAPay	-		e1_7c
+11487		-		PIay	-		e1_8
+11928		-		PIcy	-		e1_9
+
+
+Nodes
+00	-	N_ALK
+01	-	N_CAE
+02	-	N_CAW
+03	-	N_MEX1
+04	-	N_MEX2
+05	-	N_MEX3
+06	-	N_MEX4
+07	-	N_MEX5
+08	-	N_US1
+09	-	N_US2
+10	-	N_US3
+11	-	N_US4
+12	-	N_US5
+13	-	N_US6
+14	-	N_US7
+15	-	N_US8
+16	-	N_US9
+
+Producers
+00	-	P_ALK
+01	-	P_CE
+02	-	P_CW
+03	-	P_MEX2
+04	-	P_MEX5
+05	-	P_U2
+06	-	P_U3
+07	-	P_U4
+08	-	P_U5
+09	-	P_U6
+10	-	P_U7
+11	-	P_U8
+12	-	P_U9
+
+Pipelines
+00	-	*N_ALK.N_US8
+01	-	*N_CAE.N_US1
+02	-	*N_CAE.N_US2
+03	-	*N_CAE.N_US3
+04	-	*N_CAE.N_US4
+05	-	*N_CAE.N_US6
+06	-	*N_CAW.N_CAE
+07	-	*N_CAW.N_US4
+08	-	*N_CAW.N_US6
+09	-	*N_CAW.N_US8
+10	-	*N_CAW.N_US9
+11	-	*N_MEX1.N_US9
+12	-	*N_MEX2.N_MEX5
+13	-	*N_MEX2.N_US7
+14	-	*N_MEX4.N_MEX3
+15	-	*N_MEX5.N_MEX4
+16	-	*N_US1.N_CAE
+17	-	*N_US1.N_US2
+18	-	*N_US2.N_CAE
+19	-	*N_US2.N_US1
+20	-	*N_US2.N_US3
+21	-	*N_US2.N_US4
+22	-	*N_US2.N_US5
+23	-	*N_US3.N_CAE
+24	-	*N_US3.N_US2
+25	-	*N_US3.N_US4
+26	-	*N_US3.N_US5
+27	-	*N_US3.N_US6
+28	-	*N_US4.N_CAE
+29	-	*N_US4.N_US2
+30	-	*N_US4.N_US3
+31	-	*N_US4.N_US5
+32	-	*N_US4.N_US7
+33	-	*N_US4.N_US8
+34	-	*N_US5.N_US2
+35	-	*N_US5.N_US3
+36	-	*N_US5.N_US4
+37	-	*N_US5.N_US6
+38	-	*N_US5.N_US7
+39	-	*N_US6.N_CAE
+40	-	*N_US6.N_US3
+41	-	*N_US6.N_US4
+42	-	*N_US6.N_US5
+43	-	*N_US6.N_US7
+44	-	*N_US6.N_US8
+45	-	*N_US7.N_MEX2
+46	-	*N_US7.N_US4
+47	-	*N_US7.N_US5
+48	-	*N_US7.N_US6
+49	-	*N_US7.N_US8
+50	-	*N_US8.N_CAW
+51	-	*N_US8.N_MEX1
+52	-	*N_US8.N_US4
+53	-	*N_US8.N_US6
+54	-	*N_US8.N_US7
+55	-	*N_US8.N_US9
+56	-	*N_US9.N_CAW
+57	-	*N_US9.N_MEX1
+58	-	*N_US9.N_US3
+59	-	*N_US9.N_US4
+60	-	*N_US9.N_US5
+61	-	*N_US9.N_US6
+62	-	*N_US9.N_US8
+
+Years
+00	-	2010
+01	-	2015
+02	-	2020
+03	-	2025
+04	-	2030
+05	-	2035
+06	-	2040

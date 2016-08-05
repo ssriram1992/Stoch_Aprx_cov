@@ -51,15 +51,17 @@ option solvelink=5;
 $INCLUDE ./data.gms
 
 CAPpy.L(P,Y) = Qp0(P);
-Qpy.L(P,Y) = CAPpy.L(P,Y)*avl;
+Qpy.L(P,Y) = CAPpy.L(P,Y)*avl*0.99;
+Parameter Qcy(C,Y) "Consumed Quantity";
+
+$If exist ./auxi/loadpoint.gdx %no_init% execute_loadpoint './auxi/loadpoint2.gdx' d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
 
 
-$If exist ./auxi/loadpoint.gdx %no_init% execute_loadpoint './auxi/loadpoint.gdx' d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
-*d1.L(P,Y),d2.L(P,Y),d3.L(P,N,Y),d4.L(P,Y),Qpcny.L(P,C,Y),Xpy.L(P,Y),Qpay.L(P,N0,NN0,Y),Qpy.L(P,Y),CAPpy.L(P,Y),d5.L(N0,NN0,Y),d6.L(N0,NN0,Y),Qay.L(N0,NN0,Y),Xay.L(N0,NN0,Y),CAPay.L(N0,NN0,Y),PIay.L(N0,NN0,Y),PIcy.L(C,Y);
-%no_init%
 
-%no_init%Qpy.L(P,Y)$(Qpy.L(P,Y) > CAPpy.L(P,Y)) = CAPpy.L(P,Y);
-
+%no_init%Qcy(C,Y) = sum(P,Qpcny.L(P,C,Y));
+*%no_init%Qpy.L(P,Y)$(Qpy.L(P,Y) > CAPpy.L(P,Y)) = CAPpy.L(P,Y);
+%no_init%Display Qcy;
+%no_init%Display Qpy.L;
 
 %noGolembek%$ontext
 Parameter CostG_copy(P,Y);
@@ -77,12 +79,17 @@ CostG(P,Y) = CostG_copy(P,Y);
 $ontext
 $offtext
 
-
+Parameter Deviation(C,Y);
+$INCLUDE ./calib_data.gms
 
 option MCP=PATH;
+$INCLUDE ./manual_calib.gms
 Solve Sim_Nangam using MCP;
+execute_unload './auxi/error1.gdx';
+Display Qpy.L;
 abort$(Sim_Nangam.solvestat > 1) "Solver status indicates that MCP did not solve correctly" ;
 abort$(Sim_Nangam.modelstat > 2) "Model status indicates that MCP did not solve correctly"  ;
+
 
 
 Parameters
@@ -116,7 +123,7 @@ f1_2d(P,Y) = sum(C,Qpcny.L(P,C,Y)) - Qpy.L(P,Y)*(1-LossP(P,Y));
 f1_3a(P,C,Y) = min(Qpcny.L(P,C,Y) ,-df(Y)*piCY.L(C,Y)+ sum(N$(CN(C,N)),d3.L(P,N,Y)) +d4.L(P,Y));
 f1_3b(P,Y) = min(Xpy.L(P,Y) ,df(Y)*PIXP(P,Y) - sum(Y0$(ORD(Y0) <= ORD(Y)),d2.L(P,Y0)));
 f1_3c(P,N0,NN0,Y)$(Ao(N0,NN0)) = min( Qpay.L(P,N0,NN0,Y),df(Y)*PIay.L(N0,NN0,Y) + d3.L(P,N0,Y) - d3.L(P,NN0,Y)*(1-LossA(N0,NN0,Y)));
-f1_3d(P,Y) = min(Qpy.L(P,Y),df(Y)*(costP(P,Y) +2*costQ(P,Y)*Qpy.L(P,Y) - costG(P,Y)*(CAPpy.L(P,Y)-Qpy.L(P,Y))*log(1-Qpy.L(P,Y)/(CAPpy.L(P,Y)+epsilon))) + d1.L(P,Y)-(sum(N0$(PN(P,N0)),d3.L(P,N0,Y))+d4.L(P,Y))*(1-LossP(P,Y)));
+f1_3d(P,Y) = min(Qpy.L(P,Y),df(Y)*(costP(P,Y) +2*costQ(P,Y)*Qpy.L(P,Y) - costG(P,Y)*(CAPpy.L(P,Y)-Qpy.L(P,Y))*log(1-Qpy.L(P,Y)/(CAPpy.L(P,Y)+epsilon))) + d1.L(P,Y)-(sum(N0$(PN(P,N0)),d3.L(P,N0,Y)))*(1-LossP(P,Y)));
 f1_3e(P,Y) = min(CAPpy.L(P,Y),df(Y)*(costG(P,Y)*Qpy.L(P,Y)/(CAPpy.L(P,Y)+epsilon)+costG(P,Y)*log(1-Qpy.L(P,Y)/(CAPpy.L(P,Y)+epsilon)))+ d2.L(P,Y)-d1.L(P,Y));
 f1_6a(N0,NN0,Y) = min( d5.L(N0,NN0,Y),CAPay.L(N0,NN0,Y)-Qay.L(N0,NN0,Y));
 f1_6b(N0,NN0,Y) = CAPay.L(N0,NN0,Y) - Qa0(N0,NN0) - sum(Y0$(ORD(Y0) <= ORD(Y)),Xay.L(N0,NN0,Y0));
@@ -126,23 +133,33 @@ f1_7c(N0,NN0,Y) = min( CAPay.L(N0,NN0,Y),d6.L(N0,NN0,Y)-d5.L(N0,NN0,Y));
 f1_8(N0,NN0,Y) = Qay.L(N0,NN0,Y) -sum(P,Qpay.L(P,N0,NN0,Y));
 f1_9(C,Y) = PIcy.L(C,Y) - DemInt(C,Y) + DemSlope(C,Y)*sum(P,Qpcny.L(P,C,Y));
 
-*Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
-*Display f1_2a,f1_2b,f1_2c,f1_2d,f1_3a,f1_3b,f1_3c,f1_3d,f1_3e,f1_6a,f1_6b,f1_7a,f1_7b,f1_7c,f1_8,f1_9;
+Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
+Display f1_2a,f1_2b,f1_2c,f1_2d,f1_3a,f1_3b,f1_3c,f1_3d,f1_3e,f1_6a,f1_6b,f1_7a,f1_7b,f1_7c,f1_8,f1_9;
+$ontext
+$offtext
 
-
+Parameters
+t2(P,Y),
+t3(P,Y),
+t5(P,Y)
+;
+t2(P,Y) = 2*CostQ(P,Y)*Qpy.L(P,Y);
+t3(P,Y) = CostG(P,Y)*(CAPpy.L(P,Y)-Qpy.L(P,Y))*log(1-(Qpy.L(P,Y)/(CAPpy.L(P,Y)+epsilon)));
+t5(P,Y) = sum(N0$PN(P,N0),d3.L(P,N0,Y));
+Display t2,t3,t5,df;
 
 ******************
 * Output to files*
 ******************
 
-execute_unload './auxi/loadpoint.gdx'
+execute_unload './auxi/loadpoint2.gdx';
 
-Parameters Qcy(C,Y) "Consumed Quantity";
+
 Qcy(C,Y) = sum(P,Qpcny.L(P,C,Y));
-Display Qcy;
+*Display Qcy;
 
 
-file O5out /O6out.gpy/;
+file O5out /G2Py.gpy/;
 O5out.pw  = 32767;
 put O5out;
 
@@ -150,7 +167,6 @@ put O5out;
 loop((P,Y),                         put d1.L    (P,Y):12:8           / );
 loop((P,Y),                         put d2.L    (P,Y):12:8           / );
 loop((P,N,Y),                       put d3.L    (P,N,Y):12:8         / );
-loop((P,Y),                         put d4.L    (P,Y):12:8           / );
 loop((P,C,Y),                       put Qpcny.L (P,C,Y):12:8         / );
 loop((P,Y),                         put Xpy.L   (P,Y):12:8           / );
 loop((P,N,N0,Y)$(Ao(N,N0)),         put Qpay.L  (P,N,N0,Y):12:8      / );
@@ -164,7 +180,7 @@ loop((N,N0,Y)$(Ao(N,N0)),           put CAPay.L (N,N0,Y):12:8        / );
 loop((N,N0,Y)$(Ao(N,N0)),           put PIay.L  (N,N0,Y):12:8        / );
 loop((C,Y),                         put PIcy.L  (C,Y):12:8           / );
 
-
+$ontext
 
 Display Qpy.L,Xpy.L;
 Display Qay.L,Xay.L;
@@ -225,31 +241,21 @@ Ca(N,N0)$(Qa(N,N0) gt 0) = CostA(N,N0,'2040')
 Display "2040";
 Display Qpc,  Qa, Ca, Pa;
 Display "-----";
-$ontext
-***2045
-Qpc(P,C) = Qpcny.L(P,C,'2045');
-Qa(N,N0) = Qay.L(N,N0,'2045');
-Pa(N,N0)$(Qa(N,N0) gt 0) = PIay.L(N,N0,'2045');
-Ca(N,N0)$(Qa(N,N0) gt 0) = CostA(N,N0,'2045')
-Display "2045";
-Display Qpc,  Qa, Ca, Pa;
-Display "-----";
 
-***2050
-Qpc(P,C) = Qpcny.L(P,C,'2050');
-Qa(N,N0) = Qay.L(N,N0,'2050');
-Pa(N,N0)$(Qa(N,N0) gt 0) = PIay.L(N,N0,'2050');
-Ca(N,N0)$(Qa(N,N0) gt 0) = CostA(N,N0,'2050')
-Display "2050";
-Display Qpc,  Qa, Ca, Pa;
-Display "-----";
 
 
 
 Display "*************************************";
 Display "******* All Variables here **********";
 Display "*************************************";
-
-Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
 $offtext
-Display PIcy.L;
+*Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
+
+Parameter ProdCap(P,Y);
+ProdCap(P,Y) = avl*CAPpy.L(P,Y);
+Display PIcy.L, costP,costQ,costG,ProdCap;
+
+
+
+Deviation(C,Y) = Qcy(C,Y)/Consumption(C,Y);
+Display Deviation;

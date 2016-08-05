@@ -19,7 +19,7 @@ import shelve
 
 
 def Prod():
-    return 14
+    return 13
 
 def Cons():
     return 17
@@ -28,14 +28,28 @@ def Node():
     return 17
 
 def Years():
-    return 8
+    return 7
 
 def infinity():
     return 1e9
 
 # Data in ProdNode.GMS
 
-ProdNode = np.array([1,2,3,3,5,8,10,11,12,13,14,15,16,17])-1
+ProdNode = np.array([
+    1,
+    2,
+    3,
+    5,
+    8,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    ])-1
 ConsNode = np.arange(17)
 Arcs = sparse.coo_array((Node(),Node()))
 Arcs.positions = np.array([
@@ -108,76 +122,52 @@ Arcs.values = np.ones(Arcs.positions.shape[0])
 
 # Parameter definitions
 DemSlope = np.array([
-    [9.910,   9.832,   9.701,   9.628,   9.485,   9.363,   9.279,   9.173],
-    [9.791,   9.713,   8.582,   9.509,   9.366,   9.244,   9.160,   9.054],
-    [9.709,   9.631,   9.500,   9.427,   9.285,   9.162,   9.078,   8.972],
-    [9.662,   9.583,   9.452,   9.380,   9.237,   9.115,   9.031,   8.925],
-    [9.554,   9.475,   9.344,   9.272,   9.129,   9.007,   8.923,   8.816],
-    [9.461,   9.382,   9.251,   9.179,   5.036,   8.914,   8.830,   8.723],
-    [9.284,   9.205,   9.074,   9.002,   8.859,   8.737,   8.653,   8.546],
-    [8.554,   8.475,   10.344,  8.272,   8.129,   10.007,  8.923,   7.816],
-    [8.662,   8.583,   10.452,  8.380,   8.237,   10.115,  9.031,   7.925],
-    [9.284,   9.205,   9.074,   9.002,   8.859,   8.737,   8.653,   8.546],
-    [9.461,   9.382,   7.251,   9.179,   9.036,   8.914,   8.830,   8.723],
-    [9.662,   9.583,   9.452,   9.380,   9.237,   9.115,   7.031,   8.925],
-    [9.554,   9.475,   9.344,   9.272,   9.129,   9.007,   8.923,   8.816],
-    [9.910,   9.832,   9.701,   9.628,   9.485,   9.363,   11.79,   9.173],
-    [9.791,   9.713,   9.582,   9.509,   9.366,   9.244,   9.160,   9.054],
-    [8.554,   8.475,   10.344,  8.272,   8.129,   10.007,  8.923,   7.816],
-    [9.709,   9.631,   9.500,   9.427,   9.285,   9.162,   9.078,   8.972]
+    [587.640,     927.568,     957.472,     705.952,     677.364,     813.059,    1093.579],
+    [ 44.740,      55.853,      51.289,      43.181,      37.128,      35.452,      39.951],
+    [ 22.766,      24.270,      20.580,      13.968,      13.974,      13.032,      21.451],
+    [412.835,     573.533,     257.251,     152.355,     135.118,     107.779,     123.308],
+    [ 80.368,      92.288,      78.358,      50.302,      49.635,      44.115,      68.282],
+    [213.362,     135.306,     144.504,     127.365,      98.297,     105.552,     110.907],
+    [206.920,     173.503,     191.928,     172.249,     128.703,     142.762,     170.294],
+    [ 56.103,      70.815,      69.458,      65.893,      61.183,      58.957,      98.859],
+    [ 71.968,      71.838,      76.707,      56.691,      58.211,      54.491,      92.256],
+    [ 21.545,      22.828,      25.928,      20.806,      24.591,      18.398,      21.426],
+    [ 20.454,      29.787,      27.424,      22.943,      26.772,      19.211,      24.047],
+    [ 16.414,      23.400,      24.185,      18.049,      21.212,      22.095,      20.431],
+    [ 43.582,      52.029,      55.920,      40.486,      40.941,      41.615,      44.302],
+    [ 37.762,      50.127,      48.892,      37.412,      39.204,      37.492,      42.809],
+    [ 11.422,      13.946,      14.473,      10.460,      11.888,      10.081,      11.541],
+    [ 37.828,      50.189,      55.326,      37.230,      37.254,      35.828,      46.650],
+    [ 20.435,      15.637,      16.255,      33.969,      34.486,      35.878,      19.522],
     ])
+
 DemInt = np.array([
-    [99.641,  97.465,  102.073, 101.392, 98.443,  101.370, 97.237,  96.352],
-    [100.617, 98.442,  103.049, 102.368, 99.420,  102.346, 98.213,  97.329],
-    [100.792, 98.616,  103.224, 102.542, 99.594,  102.520, 98.387,  97.503],
-    [94.250,  92.075,  96.682,  96.001,  93.053,  95.979,  91.846,  90.961],
-    [102.246, 100.070, 104.678, 103.997, 101.048, 103.975, 99.842,  98.957],
-    [94.260,  92.085,  96.692,  96.011,  93.063,  95.989,  91.856,  90.972],
-    [99.073,  96.897,  101.505, 100.824, 97.875,  100.801, 96.668,  95.784],
-    [100.617, 98.442,  103.049, 102.368, 99.420,  102.346, 98.213,  97.329],
-    [100.792, 98.616,  103.224, 102.542, 99.594,  102.520, 98.387,  97.503],
-    [99.073,  96.897,  101.505, 100.824, 97.875,  100.801, 96.668,  95.784],
-    [94.250,  92.075,  96.682,  96.001,  93.053,  95.979,  91.846,  90.961],
-    [100.792, 98.616,  103.224, 102.542, 99.594,  102.520, 98.387,  97.503],
-    [100.617, 98.442,  103.049, 102.368, 99.420,  102.346, 98.213,  97.329],
-    [94.260,  92.085,  96.692,  96.011,  93.063,  95.989,  91.856,  90.972],
-    [102.246, 100.070, 104.678, 103.997, 101.048, 103.975, 99.842,  98.957],
-    [99.641,  97.465,  102.073, 101.392, 98.443,  101.370, 97.237,  96.352],
-    [100.617, 98.442,  103.049, 102.368, 99.420,  102.346, 98.213,  97.329]
+    [5260.904,    8304.141,    8571.865,    6320.109,    6064.169,    7278.993,    9790.377],
+    [5742.035,    7984.687,    7940.178,    7329.964,    6541.520,    6494.517,    7589.799],
+    [5582.383,    8047.817,    8032.551,    6034.117,    6519.107,    6279.892,   10558.330],
+    [5730.318,    8219.812,    8595.022,    5980.642,    6642.658,    6301.067,    8354.195],
+    [5770.511,    8638.337,    8584.933,    6024.302,    6493.210,    6252.546,   10422.902],
+    [5482.722,    6224.279,    8228.130,    7625.213,    6892.996,    8280.008,    9622.874],
+    [5381.252,    6034.147,    8086.187,    7472.622,    6745.686,    8259.725,   10779.658],
+    [5286.827,    5986.282,    8025.519,    7393.420,    6583.171,    6343.725,   10637.086],
+    [5977.904,    8807.461,    8714.732,    6121.790,    6613.388,    6435.328,   10791.791],
+    [5692.167,    8176.636,    8156.528,    6221.096,    7888.909,    6379.773,    7607.755],
+    [5956.511,    8264.041,    8157.659,    6890.320,    8371.940,    6337.309,    7611.429],
+    [5749.338,    8110.575,    8612.012,    6478.208,    7653.783,    7972.552,    7507.630],
+    [5844.117,    7988.324,    7981.211,    6128.768,    6507.264,    6344.904,    7616.303],
+    [5933.253,    7993.706,    7956.347,    6128.768,    6507.264,    6344.904,    7616.387],
+    [5749.639,    8004.029,    7839.229,    6025.006,    7206.689,    6216.265,    7489.034],
+    [5754.215,    8566.830,    8899.230,    6029.226,    6481.576,    6233.385,    8626.587],
+    [5746.509,    8219.548,    9081.388,    6461.168,    6633.403,    6242.151,    7551.251],
     ])
-
-df = np.ones(Years())
-for i in np.arange(1,Years()):
-    df[i] = df[i-1]*0.95
-
 
 CostP = np.zeros((Prod(),Years()))
-CostP[:,0]=np.array([20,20,20,20,25,25,45,45,50,45,45,18,45,50])
+CostP[:,0]=np.array([20,20,20,25,25,45,45,50,45,45,18,45,50])
 for i in np.arange(1,Years()):
     CostP[:,i]=CostP[:,i-1].copy()
 
 CostQ = np.zeros((Prod(),Years()))+0.1
 CostG = np.zeros((Prod(),Years()))+10
-
-LossP = np.zeros((Prod(),Years()))
-LossA = np.zeros((Arcs.size(),Years()))
-
-Qp0 = np.zeros(Prod()) + 100
-Qa0 = np.array([0.01,20.00,88.00,35.00,1.00,1.00,130.00,139.00,139.00,156.00,
-                52.00,17.00,20.00,24.00,19.00,45.00,6.00,12.00,3.00,85.00,
-                13.00,13.00,68.00,105.00,61.00,27.00,78.00,16.00,2.00,61.00,3
-                60.00,10.00,25.00,58.00,241.00,46.00,262.00,6.00,11.00,2.00,
-                262.00,411.00,390.00,12.00,108.00,72.00,237.00,852.00,552.00,137.00,
-                2.00,7.00,191.00,209.00,105.00,306.00,1.00,23.00,2.00,97.00,
-                5.00,77.00,78.00])
-
-PIXP = np.zeros((Prod(),Years())) + 2
-PIXA = np.zeros((Arcs.size(),Years()))+3
-
-
-CostA = np.zeros((Arcs.size(),Years()))
-for i in np.arange(Arcs.size()):
-     CostA[i,0] = 0.2
 
 CostA = np.zeros((Arcs.size(),Years()))
 CostA[:,0] = np.array([60.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,
@@ -187,15 +177,40 @@ CostA[:,0] = np.array([60.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.
                        20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,
                        20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,20.00,
                        20.00,20.00,20.00])
+                       
+Qa0 = np.array([0.01,20.00,88.00,35.00,1.00,1.00,130.00,139.00,139.00,156.00,
+                52.00,17.00,20.00,24.00,19.00,45.00,6.00,12.00,3.00,85.00,
+                13.00,13.00,68.00,105.00,61.00,27.00,78.00,16.00,2.00,61.00,
+                360.00,10.00,25.00,58.00,241.00,46.00,262.00,6.00,11.00,2.00,
+                262.00,411.00,390.00,12.00,108.00,72.00,237.00,852.00,552.00,137.00,
+                2.00,7.00,191.00,209.00,105.00,306.00,1.00,23.00,2.00,97.00,
+                5.00,77.00,78.00])*2
+
+LossP = np.zeros((Prod(),Years()))+0.0
+Qp0 = np.zeros(Prod()) + 2000
+
+LossA = np.zeros((Arcs.size(),Years()))
+
+PIXP = np.zeros((Prod(),Years())) + 2
+PIXA = np.zeros((Arcs.size(),Years())) + 4
+
+df = np.ones(Years())
 
 # Inflation
 for i in np.arange(Years()-1):
     PIXP[:,i+1] = PIXP[:,i] + 0.5
     PIXA[:,i+1] = PIXA[:,i] + 0.3
+    CostA[:,i+1] = CostA[:,i]
+    df[i+1] = df[i]*0.95
+    
+CostP = CostP*1.1
 
-Number_of_Variables = Years()*(Prod()*6 + Prod()*(Node()+Cons()+Arcs.size()) + Arcs.size()*6 + Cons())
+gol_eps = 0.01
+avl = 0.7
+
+Number_of_Variables = Years()*(Prod()*5 + Prod()*(Node()+Cons()+Arcs.size()) + Arcs.size()*6 + Cons())
 Number_of_Parameters = Years()*(2*Cons()+5*Prod()+3*Arcs.size()+1)
-del(i,j)
+del(i)
 
 
 ###############
@@ -219,12 +234,7 @@ def varPy2Gams(x,posit = 0):
     #
     d3      =   np.array(temp[0:Prod()*Node()*Years()]).reshape(Prod(),Node(),Years())
     temp    =   temp[Prod()*Node()*Years():]
-    count = count + Prod()*Years()
-    positions = np.concatenate((positions,[count]))
-    #
-    d4      =   np.array(temp[0:Prod()*Years()]).reshape(Prod(),Years())
-    temp    =   temp[Prod()*Years():]
-    count = count + Prod()*Years()*Node()
+    count = count + Prod()*Node()*Years()
     positions = np.concatenate((positions,[count]))
     #
     Qpcny   =   np.array(temp[0:Prod()*Cons()*Years()]).reshape(Prod(),Cons(),Years())
@@ -286,13 +296,13 @@ def varPy2Gams(x,posit = 0):
     PIcy    =   np.array(temp[0:Cons()*Years()]).reshape(Cons(),Years())
     # Return
     if(posit):
-        return (d1, d2, d3, d4, Qpcny, Xpy, Qpay, Qpy, CAPpy, d5, d6, Qay, Xay, CAPay, PIay, PIcy,positions)
+        return (d1, d2, d3, Qpcny, Xpy, Qpay, Qpy, CAPpy, d5, d6, Qay, Xay, CAPay, PIay, PIcy,positions)
     else:
-        return (d1, d2, d3, d4, Qpcny, Xpy, Qpay, Qpy, CAPpy, d5, d6, Qay, Xay, CAPay, PIay, PIcy)
+        return (d1, d2, d3, Qpcny, Xpy, Qpay, Qpy, CAPpy, d5, d6, Qay, Xay, CAPay, PIay, PIcy)
 
-def varGams2py(d1,d2,d3,d4,Qpcny,Qpsny,Xpy,Qpay,Qpy,CAPpy,d5,d6,Qsny,Xsy,CAPsy,PIsy,d7,d8,Qay,Xay,CAPay,PIay,PIcy):
+def varGams2py(d1,d2,d3,Qpcny,Qpsny,Xpy,Qpay,Qpy,CAPpy,d5,d6,Qsny,Xsy,CAPsy,PIsy,d7,d8,Qay,Xay,CAPay,PIay,PIcy):
     x = np.concatenate((
-            d1.flatten(),d2.flatten(),d3.flatten(),d4.flatten(),
+            d1.flatten(),d2.flatten(),d3.flatten(),
             Qpcny.flatten(),Xpy.flatten(),Qpay.flatten(),Qpy.flatten(),CAPpy.flatten(),
             d5.flatten(),d6.flatten(),
             Qay.flatten(),Xay.flatten(),CAPay.flatten(),PIay.flatten(),
@@ -371,7 +381,7 @@ def StochPy2Gams(StochA = None,posit = 0):
 
 
 def F(x,a=None):
-    (d1,d2,d3,d4,Qpcny,Xpy,Qpay,Qpy,CAPpy,
+    (d1,d2,d3,Qpcny,Xpy,Qpay,Qpy,CAPpy,
             d5,d6,Qay,Xay,CAPay,PIay,
             PIcy)                            = varPy2Gams(x)
     if np.any(a is None):
@@ -380,11 +390,10 @@ def F(x,a=None):
     e1_2a   =   E1_2a(CAPpy, Qpy)
     e1_2b   =   E1_2b(CAPpy, Qp0, Xpy)
     e1_2c   =   E1_2c(Qpcny, Qpay, Qpy, LossP+aLossP, LossA+aLossA)
-    e1_2d   =   E1_2d(Qpcny, Qpy,LossP+aLossP)
-    e1_3a   =   E1_3a(df+adf, PIcy, d3, d4)
+    e1_3a   =   E1_3a(df+adf, PIcy, d3)
     e1_3b   =   E1_3b(df+adf,PIXP+aPIXP, d2)
     e1_3c   =   E1_3c(df+adf,PIay, d3, LossA+aLossA)
-    e1_3d   =   E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, d4, LossP+aLossP)
+    e1_3d   =   E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, LossP+aLossP)
     e1_3e   =   E1_3e(df+adf,d2, d1, CostG+aCostG, Qpy, CAPpy)
     e1_6a   =   E1_6a(CAPay, Qay)
     e1_6b   =   E1_6b(CAPay, Qa0, Xay)
@@ -397,7 +406,6 @@ def F(x,a=None):
             e1_2a.flatten(),
             e1_2b.flatten(),
             e1_2c.flatten(),
-            e1_2d.flatten(),
             e1_3a.flatten(),
             e1_3b.flatten(),
             e1_3c.flatten(),
@@ -419,7 +427,7 @@ def VecNumGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
     (adf, aDemSlope,aDemInt,aCostP,aCostQ,aCostG,
         aCostA,aPIXP,aPIXA,aLossP,aLossA,aposit) = StochPy2Gams(a,posit = 1)
     N = x.size
-    (e1_2a,e1_2b,e1_2c,e1_2d,
+    (e1_2a,e1_2b,e1_2c,
     e1_3a,e1_3b,e1_3c,e1_3d,e1_3e,
     e1_6a,e1_6b,e1_7a,e1_7b,e1_7c,
     e1_8,e1_9,positions)                 = varPy2Gams(Fx,posit = True)
@@ -428,68 +436,62 @@ def VecNumGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
         dFx = Fx.copy()
         delta = np.zeros(x.shape)
         delta[i] = epsilon
-        (d1,d2,d3,d4,Qpcny,Xpy,Qpay,Qpy,CAPpy,
+        (d1,d2,d3,Qpcny,Xpy,Qpay,Qpy,CAPpy,
             d5,d6,Qay,Xay,CAPay,PIay,
             PIcy)          = varPy2Gams(x + delta)
         # Conditionals
         if(i<positions[1]): #d1
-            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, d4, LossP+aLossP)
+            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3,  LossP+aLossP)
             e1_3e = E1_3e(df+adf,d2, d1, CostG+aCostG, Qpy, CAPpy)
         elif(i<positions[2]): #d2
             e1_3b = E1_3b(df+adf,PIXP+aPIXP, d2)
             e1_3e = E1_3e(df+adf,d2, d1, CostG+aCostG, Qpy, CAPpy)
         elif(i<positions[3]): #d3
-            e1_3a = E1_3a(df+adf,PIcy, d3, d4)
+            e1_3a = E1_3a(df+adf,PIcy, d3)
             e1_3c = E1_3c(df+adf,PIay, d3, LossA+aLossA)
-            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, d4, LossP+aLossP)
-        elif(i<positions[4]): #d4
-            e1_3a = E1_3a(df+adf,PIcy, d3, d4)
-            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, d4, LossP+aLossP)
-        elif(i<positions[5]): #Qpcny
+            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3,  LossP+aLossP)
+        elif(i<positions[4]): #Qpcny
             e1_2c = E1_2c(Qpcny, Qpay, Qpy, LossP+aLossP, LossA+aLossA)
-            e1_2d = E1_2d(Qpcny, Qpy, LossP+aLossP)
             e1_9 = E1_9(PIcy, DemInt+aDemInt, DemSlope+aDemSlope, Qpcny)
-        elif(i<positions[6]): #Xpy
+        elif(i<positions[5]): #Xpy
             e1_2b = E1_2b(CAPpy, Qp0, Xpy)
-        elif(i<positions[7]): #Qpay
+        elif(i<positions[6]): #Qpay
             e1_2c = E1_2c(Qpcny, Qpay, Qpy, LossP+aLossP, LossA+aLossA)
             e1_8 = E1_8(Qay, Qpay)
-        elif(i<positions[8]): #Qpy
+        elif(i<positions[7]): #Qpy
             e1_2a = E1_2a(CAPpy, Qpy)
             e1_2c = E1_2c(Qpcny, Qpay, Qpy, LossP+aLossP, LossA+aLossA)
-            e1_2d = E1_2d(Qpcny, Qpy, LossP+aLossP)
-            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, d4, LossP+aLossP)
+            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3,  LossP+aLossP)
             e1_3e = E1_3e(df+adf,d2, d1, CostG+aCostG, Qpy, CAPpy)
-        elif(i<positions[9]):  #CAPpy
+        elif(i<positions[8]):  #CAPpy
             e1_2a = E1_2a(CAPpy, Qpy)
             e1_2b = E1_2b(CAPpy, Qp0, Xpy)
-            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, d4, LossP+aLossP)
+            e1_3d = E1_3d(df+adf,CostP+aCostP, CostQ+aCostQ, CostG+aCostG, Qpy, CAPpy, d1, d3,  LossP+aLossP)
             e1_3e = E1_3e(df+adf,d2, d1, CostG+aCostG, Qpy, CAPpy)
-        elif(i<positions[10]): #d5
+        elif(i<positions[9]): #d5
             e1_7a = E1_7a(df+adf,PIay, CostA+aCostA, d5)
             e1_7c = E1_7c(d5, d6)
-        elif(i<positions[11]): #d6
+        elif(i<positions[10]): #d6
             e1_7b = E1_7b(df+adf,PIXA+aPIXA, d6)
             e1_7c = E1_7c(d5, d6)
-        elif(i<positions[12]): #Qay
+        elif(i<positions[11]): #Qay
             e1_6a = E1_6a(CAPay, Qay)
             e1_8 = E1_8(Qay, Qpay)
-        elif(i<positions[13]): #Xay
+        elif(i<positions[12]): #Xay
             e1_6b = E1_6b(CAPay, Qa0, Xay)
-        elif(i<positions[14]): #CAPay
+        elif(i<positions[13]): #CAPay
             e1_6a = E1_6a(CAPay, Qay)
             e1_6b = E1_6b(CAPay, Qa0, Xay)
-        elif(i<positions[15]): #PIay
+        elif(i<positions[14]): #PIay
             e1_3c = E1_3c(df+adf,PIay, d3, LossA+aLossA)
             e1_7a = E1_7a(df+adf,PIay, CostA+aCostA, d5)
         elif (i< N): #PIcy
-            e1_3a = E1_3a(df+adf,PIcy, d3, d4)
+            e1_3a = E1_3a(df+adf,PIcy, d3)
             e1_9 = E1_9(PIcy, DemInt+aDemInt, DemSlope+aDemSlope, Qpcny)
         dFx = np.concatenate((
             e1_2a.flatten(),
             e1_2b.flatten(),
             e1_2c.flatten(),
-            e1_2d.flatten(),
             e1_3a.flatten(),
             e1_3b.flatten(),
             e1_3c.flatten(),
@@ -516,13 +518,13 @@ def VecNumRandGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
         a = np.zeros(Number_of_Parameters)
     (adf, aDemSlope,aDemInt,aCostP,aCostQ,aCostG,
         aCostA,aPIXP,aPIXA,aLossP,aLossA,aposit) = StochPy2Gams(a,posit = 1)
-    (e1_2a,e1_2b,e1_2c,e1_2d,
+    (e1_2a,e1_2b,e1_2c,
     e1_3a,e1_3b,e1_3c,e1_3d,e1_3e,
     e1_6a,e1_6b,e1_7a,e1_7b,e1_7c,
     e1_8,e1_9,positions)                 = varPy2Gams(Fx,posit = True)
     Na = a.size
     Nx = x.size
-    (d1,d2,d3,d4,Qpcny,Xpy,Qpay,Qpy,CAPpy,
+    (d1,d2,d3,Qpcny,Xpy,Qpay,Qpy,CAPpy,
             d5,d6,Qay,Xay,CAPay,PIay,
             PIcy)          = varPy2Gams(x)
     Grad = sp.sparse.dok_matrix((Na,Nx))
@@ -534,10 +536,10 @@ def VecNumRandGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
             aCostA,aPIXP,aPIXA,aLossP,aLossA)    = StochPy2Gams(a+delta)
         # Conditionals
         if (i<aposit[1]): #adf
-            e1_3a = E1_3a(df+adf, PIcy, d3, d4)
+            e1_3a = E1_3a(df+adf, PIcy, d3)
             e1_3b = E1_3b(df+adf, PIXP, d2)
             e1_3c = E1_3c(df+adf, PIay, d3, LossA)
-            e1_3d = E1_3d(df+adf, CostP, CostQ, CostG, Qpy, CAPpy, d1, d3, d4, LossP)
+            e1_3d = E1_3d(df+adf, CostP, CostQ, CostG, Qpy, CAPpy, d1, d3, LossP)
             e1_3e = E1_3e(df+adf, d2, d1, CostG, Qpy, CAPpy)
             e1_7a = E1_7a(df+adf, PIay, CostA, d5)
             e1_7b = E1_7b(df+adf, PIXA, d6)
@@ -546,11 +548,11 @@ def VecNumRandGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
         elif(i<aposit[3]):  # aDemInt
             e1_9 = E1_9(PIcy, DemInt+aDemInt, DemSlope, Qpcny)
         elif(i<aposit[4]):  # aCostP
-            e1_3d = E1_3d(df,CostP+aCostP, CostQ, CostG, Qpy, CAPpy, d1, d3, d4, LossP)
+            e1_3d = E1_3d(df,CostP+aCostP, CostQ, CostG, Qpy, CAPpy, d1, d3, LossP)
         elif(i<aposit[5]):  # aCostQ
-            e1_3d = E1_3d(df,CostP, CostQ+aCostQ, CostG, Qpy, CAPpy, d1, d3, d4, LossP)
+            e1_3d = E1_3d(df,CostP, CostQ+aCostQ, CostG, Qpy, CAPpy, d1, d3, LossP)
         elif(i<aposit[6]):  # aCostG
-            e1_3d = E1_3d(df,CostP, CostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, d4, LossP)
+            e1_3d = E1_3d(df,CostP, CostQ, CostG+aCostG, Qpy, CAPpy, d1, d3, LossP)
             e1_3e = E1_3e(df, d2, d1, CostG+aCostG, Qpy, CAPpy)
         elif(i<aposit[7]):  # aCostA
             e1_7a = E1_7a(df,PIay, CostA+aCostA, d5)
@@ -560,8 +562,7 @@ def VecNumRandGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
             e1_7b = E1_7b(df,PIXA+aPIXA, d6)
         elif(i<aposit[10]): # LossP
             e1_2c = E1_2c(Qpcny, Qpay, Qpy, LossP+aLossP, LossA)
-            e1_2d = E1_2d(Qpcny, Qpy, LossP+aLossP)
-            e1_3d = E1_3d(df,CostP, CostQ, CostG, Qpy, CAPpy, d1, d3, d4, LossP+aLossP)
+            e1_3d = E1_3d(df,CostP, CostQ, CostG, Qpy, CAPpy, d1, d3, LossP+aLossP)
         else:               # LossA
             e1_2c = E1_2c(Qpcny, Qpay, Qpy, LossP, LossA+aLossA)
             e1_3c = E1_3c(df,PIay, d3, LossA+aLossA)
@@ -569,7 +570,6 @@ def VecNumRandGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
             e1_2a.flatten(),
             e1_2b.flatten(),
             e1_2c.flatten(),
-            e1_2d.flatten(),
             e1_3a.flatten(),
             e1_3b.flatten(),
             e1_3c.flatten(),
@@ -598,7 +598,6 @@ def freevar():
             np.zeros((Prod(),Years())).flatten(),                    #E1_2a
             np.ones((Prod(),Years())).flatten(),                     #E1_2b
             np.ones((Prod(),Node(),Years())).flatten(),              #E1_2c
-            np.ones((Prod(),Years())).flatten(),                     #E1_2d
             np.zeros((Prod(),Cons(),Years())).flatten(),             #E1_3a
             np.zeros((Prod(),Years())).flatten(),                    #E1_3b
             np.zeros((Prod(),Arcs.size(),Years())).flatten(),        #E1_3c
@@ -616,11 +615,12 @@ def freevar():
             ))
     return np.where(ff)[0]
 
+####################################
+######## Model Definitions #########
+####################################
 
-
-#Equation definitions
 def E1_2a(CAPpy,Qpy): #Dual d1(P,Y)
-    return CAPpy-Qpy
+    return avl*CAPpy-Qpy
 
 def E1_2b(CAPpy, Qp0, Xpy): #Dual d2(P,Y)
     return CAPpy - np.matlib.repmat(Qp0, Years(), 1).T - np.cumsum(Xpy,1)
@@ -642,19 +642,11 @@ def E1_2c(Qpcny, Qpay,Qpy,LossP,LossA): #Dual d3(P,N,Y)
         e1_2c[:,i,:] = t1+t2-t3-t4*(1-LossP)
     return e1_2c
 
-def E1_2d(Qpcny,Qpy,LossP): #Dual d4(P,Y)
-    t1 = np.sum(Qpcny,1)
-    t2 = Qpy*(1-LossP)
-    return t1-t2
-
-def E1_3a(df, PIcy,d3,d4): #Dual Qpcny(P,C,Y)
+def E1_3a(df, PIcy,d3): #Dual Qpcny(P,C,Y)
     t1 = np.zeros((Prod(),Cons(),Years()))
     t1[:,:,:] = -PIcy
     t2 = d3[:,ConsNode,:]
-    t3 = np.zeros((Prod(),Cons(),Years()))
-    for i in np.arange(Cons()):
-        t3[:,i,:] = d4
-    return df*t1+t2+t3
+    return df*t1+t2
 
 def E1_3b(df,PIXP,d2): #Dual Xpy(P,Y)
     return (df*PIXP - np.cumsum(d2,axis = 1))
@@ -667,19 +659,19 @@ def E1_3c(df,PIay,d3,LossA): # Dual Qpay(P,A,Y)
         t2[:,i,:] = d3[:,Arcs.positions[i,0],:] - d3[:,Arcs.positions[i,1],:]*(1-LossA[i,:])
     return (df*t1 + t2)
 
-def E1_3d(df,CostP, CostQ, CostG, Qpy, CAPpy, d1, d3, d4, LossP): #Dual Qpy(P,Y)
+def E1_3d(df,CostP, CostQ, CostG, Qpy, CAPpy, d1, d3, LossP): #Dual Qpy(P,Y)
     t2 = 2*CostQ*Qpy
-    t3 = CostG*(CAPpy-Qpy)*np.log(1-(Qpy/(CAPpy+epsilon())))
+    t3 = CostG*(CAPpy-Qpy)*np.log(1-(Qpy/(CAPpy+gol_eps)))
     t5 = np.zeros((Prod(),Years()))
     for i in np.arange(Prod()):
         t5[i,:] = d3[i,ProdNode[i],:]
-    return df*(CostP +t2 -t3) +d1 -(t5+d4)*(1-LossP)
+    return df*(CostP +t2 -t3) +d1 -(t5)*(1-LossP)
 
 def E1_3e(df,d2,d1,CostG,Qpy,CAPpy):  #Dual CAPpy(P,Y)
-    temp = Qpy/(CAPpy+epsilon())
+    temp = Qpy/(CAPpy+gol_eps)
     t1 = CostG*temp
     t2 = CostG*np.log(1-temp)
-    return df*(t1+t2)+d2-d1
+    return df*(t1+t2)+avl*d2-d1
 
 def E1_6a(CAPay,Qay): #Dual d5(A,Y)
     return (CAPay - Qay )
@@ -702,140 +694,102 @@ def E1_8(Qay,Qpay): #Dual PIay(A,Y)
 def E1_9(PIcy, DemInt, DemSlope, Qpcny): #Dual PIcy(C,Y)
     return (PIcy - DemInt + DemSlope*(np.sum(Qpcny,axis = 0)))
 
-
 ####################################
-######## Stochasticizations ########
+########### Calibration ############
 ####################################
 
-# Move the following files to server
-#       MeritFuncs.py
-#       sparse.py
-#       O6out.gpy
+cPfac = np.array([
+    [25.61,  47.52,   49.59,   20.85,   22.89,   23.08,   27.23],
+    [24.47,  35.19,   31.04,   17.15,   34.99,   30.37,   44.90],
+    [0.083,  0.200,   0.474,   0.472,   0.594,   0.404,   0.398],
+    [24.71,  36.49,   39.29,   20.37,   21.89,   17.98,   22.65],
+    [1.986,  1.927,   6.688,   2.926,   3.256,   2.705,   2.823],
+    [1.002,  0.822,   0.724,   0.594,   0.573,   0.429,   0.545],
+    [12.36,  21.62,   23.08,   12.61,   13.65,   8.709,   11.73],
+    [10.71,  16.83,   14.87,   10.77,   8.818,   6.385,   10.50],
+    [12.30,  23.50,   20.91,   9.496,   10.13,   8.003,   10.65],
+    [17.50,  23.51,   23.53,   13.88,   14.93,   13.73,   16.62],
+    [0.039,  0.067,   0.056,   0.034,   0.036,   0.041,   0.052],
+    [0.422,  0.530,   0.320,   0.220,   0.237,   0.193,   0.266],
+    [15.50,  25.48,   24.49,   14.52,   14.79,   11.96,   13.69],
+    ])
 
 
+CostP = CostP*cPfac/df
+CostQ = CostQ*cPfac/df
 
-StochA = np.zeros(Number_of_Parameters)
-xstar = np.zeros(Number_of_Variables)
+CostG[:,0] = CostG[:,0]*0.7
 
-fi = open("O6out.gpy")
-for i in np.arange(Number_of_Variables):
-    xstar[i] = fi.readline()
+# P_CE
+CostG[1,:] = CostG[1,:]*5.76/df/df
+CostG[1,0] = CostG[1,0]*0.9
 
+# P_CW
+CostG[2,0] = CostG[2,0]*0.81*0.85
+CostG[2,1] = CostG[2,1]*0.95
+CostG[2,5] = CostG[2,5]*0.9
+CostG[2,:] = CostG[2,:]/2.2
 
-fi.close()
-del fi
+# P_MEX2
+CostG[3,0] = CostG[3,0]*0.4
+CostG[3,1] = CostG[3,1]*1.5
 
-Fx = F(xstar,a=StochA)
+# P_MEX5
+CostG[4,0] = CostG[4,0]*1.17
 
-free = freevar()
+# P_US2
+CostG[5,0] = CostG[5,0]*0.7
+CostG[5,1] = CostG[5,1]*0.7
+CostG[5,2] = CostG[5,2]*0.7
+CostG[5,3] = CostG[5,3]*0.5
+CostG[5,4] = CostG[5,4]*0.5
+CostG[5,5] = CostG[5,5]*0.45
+CostG[5,6] = CostG[5,6]*0.5
 
-# Confirming all is good
-# x >= 0
-temp = np.where(xstar < -tol())[0]
-temp2 = np.where(1-np.array([i in free for i in temp]))[0]
-if temp2.size!=0:
-    print("Error - Non Free Var negative")
+# P_US3
+CostG[6,0] = CostG[6,0]/0.95
+CostG[6,3] = CostG[6,3]*0.75
+CostG[6,:] = CostG[6,:]*0.85*df
 
-# Fx >= 0
-if (np.any(Fx < -tol())):
-    print("Error - Fx negative")
+# P_US4
+CostG[7,0] = CostG[7,0]*0.7/0.95
+CostG[7,3] = CostG[7,3]*0.75
 
-# x^TFx = 0
-temp = np.where(1-np.isclose(Fx[np.where(1-np.isclose(xstar,0))],0,1e-5,1e-5))[0].copy()
-temp2 = np.where(1-np.isclose(xstar,0))[0][temp].copy()
-if temp2.size!=0:
-    print("Error - Complementarity not maintained")
+# P_US5
+CostG[8,0] = CostG[8,0]*0.9
+CostG[8,:] = CostG[8,:]*0.7
 
-M = minFunc()
-FB = MeritFuncs.FischerBurmeister()
+# P_US6
+CostG[9,0] = CostG[9,0]*0.15
+CostG[9,1] = CostG[9,1]*1.2
+CostG[9,2] = CostG[9,2]*1.05
 
-# This should be zero
-f(xstar,Fx, free=free)
+# P_US7
+CostG[10,0] = CostG[10,0]*0.92
+CostG[10,1] = CostG[10,1]*1.25
+CostG[10,2] = CostG[10,2]*1.2
+CostG[10,3] = CostG[10,3]*0.75
+CostG[10,4] = CostG[10,4]*0.8
+CostG[10,5] = CostG[10,5]*0.75
+CostG[10,6] = CostG[10,6]*0.82
+CostG[10,:] = CostG[10,:]/4.8
 
-# Splits
-(d1,d2,d3,d4,Qpcny,Xpy,Qpay,Qpy,CAPpy,d5,d6,Qay,Xay,CAPay,PIay,
-                PIcy)          = varPy2Gams(xstar)
-(e1_2a,e1_2b,e1_2c,e1_2d,e1_3a,e1_3b,e1_3c,e1_3d,e1_3e,e1_6a,e1_6b,e1_7a,e1_7b,e1_7c,
-    e1_8,e1_9,positions)                 = varPy2Gams(Fx,posit = True)
+# P_US8
+CostG[11,0] = CostG[11,0]*0.95
+CostG[11,1] = CostG[11,1]*1.05
+CostG[11,2] = CostG[11,2]*1
+CostG[11,3] = CostG[11,3]*0.65
+CostG[11,4] = CostG[11,4]*0.7
+CostG[11,5] = CostG[11,5]*0.6
+CostG[11,6] = CostG[11,6]*0.75
+CostG[11,:] = CostG[11,:]/3
 
+# P_US9
+CostG[12,:] = CostG[12,:]*1.1
+CostG[12,0] = CostG[12,0]*0.1
 
-# Gradients
-Gx = VecNumGrad(F, xstar)
-
-# Run the following command only in Python 3. Not otherwise
-# Hx = VecNumHess(F, xstar)
-Jx = VecNumRandGrad(F,xstar,StochA)
-
-# Computations
-# grad of \Phi
-gP = grad_Phi(xstar,Fx,F=F,dF =Gx, free=free,sparsed = 1,M=M)
-gP =  sp.sparse.csr_matrix(gP)
-gPT = sp.sparse.csr_matrix(gP.transpose())
-
-# Grad and Hess of f = 0.5*norm(\Phi)^2
-# This is some random text
-
-Phix = Phi(xstar,Fx,free=free,M=M,a=StochA)
-G = grad_f(xstar,Fx,F=F,a=StochA,Phix = Phix, dF = Gx, J=gPT,free=free,M=M)
-H = hess_f(xstar,Fx,F,StochA,dF = Gx, Phix = Phix,ddF = Number_of_Variables, J = gP, Jtrans = gPT, free=free, M=M)
-H = np.array(H.todense()).squeeze()
-
-J_Phi = jacob_Phi(xstar,Fx,F,a=StochA,dFa=Jx,free=free,M=M,sparsed=1)
-fJ = jacob_f(xstar,Fx=Fx,F=F,a=StochA,free=free,J_Phi=J_Phi,dF = gP,M=M)
-
-import shelve
-filename = 'HandJ.out'
-saveVars = ['H','fJ']
-my_shelf = shelve.open(filename,'n') # 'n' for new
-for key in saveVars:
-    try:
-        my_shelf[key] = globals()[key]
-    except TypeError:
-        #
-        # __builtins__, my_shelf, and imported modules can not be shelved.
-        #
-        print('ERROR shelving: {0}'.format(key))
-
-my_shelf.close()
-
-H = correct_singularity(H,force=1)
-H_chol = np.linalg.cholesky(H)
-T = np.linalg.solve(H, fJ)
-np.savetxt('T_testvals.csv', T,delimiter=',')
-
-filename='./shelve.out'
-my_shelf = shelve.open(filename,'n') # 'n' for new
-saveVars = ['Gx','G','H','gP','gPT','Jx','J_Phi','fJ','T','Phix']
-
-for key in saveVars:
-    try:
-        my_shelf[key] = globals()[key]
-    except TypeError:
-        #
-        # __builtins__, my_shelf, and imported modules can not be shelved.
-        #
-        print('ERROR shelving: {0}'.format(key))
-my_shelf.close()
-
-
-my_shelf = shelve.open(filename)
-for key in my_shelf:
-    globals()[key]=my_shelf[key]
-
-my_shelf.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Tariffs
+CostA[np.where(Arcs.positions[:,1]==13)[0],:] = CostA[np.where(Arcs.positions[:,1]==13)[0],:]*4
 
 
 

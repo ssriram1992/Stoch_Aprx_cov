@@ -24,7 +24,7 @@ import MeritFuncs
 # Constants definition
 ########################
 def tol():
-    return 1e-5
+    return 1e-4
 
 def epsilon():
     return 1e-5
