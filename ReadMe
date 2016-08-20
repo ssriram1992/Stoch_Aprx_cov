@@ -15,7 +15,8 @@ Simple_Nangam.gms - to run it under normal conditions
 Supply_price.gms  - Calibrate supply price
 
 
-Positions, variables and equations
+Positions
+variables and equations
 0			-		d1		-		e1_2a
 91			-		d2		-		e1_2b
 182			-		d3		-		e1_2c
@@ -31,6 +32,28 @@ Positions, variables and equations
 11046		-		CAPay	-		e1_7c
 11487		-		PIay	-		e1_8
 11928		-		PIcy	-		e1_9
+
+0			-		df
+7			-		DemSlope
+126			-		DemInt
+245			-		CostP
+336			-		CostQ
+427			-		CostG
+518			-		CostA
+959			-		PIXP
+1050		-		PIXA
+1491		-		LossP
+1582		-		LossA
+
+Useful variables
+0			-		Qpcny
+1547		-		Xpy
+1638		-		Qpy
+1729		-		Qay
+2170		-		Xay
+2611		-		PIay
+3052		-		PIcy
+
 
 
 Nodes

@@ -186,8 +186,9 @@ Display Qpy.L,Xpy.L;
 Display Qay.L,Xay.L;
 
 Display Qpcny.L, Qay.L,  PIcy.L;
-
+$offtext
 Parameters Qpc(P,C) "Quantity from P to C", Qa(N,N0) "Arc flow", Pa(N,N0) "Price for transport", Ca(N,N0) "Cost for transport";
+
 ***2015
 Qpc(P,C) = Qpcny.L(P,C,'2015');
 Qa(N,N0) = Qay.L(N,N0,'2015');
@@ -248,7 +249,7 @@ Display "-----";
 Display "*************************************";
 Display "******* All Variables here **********";
 Display "*************************************";
-$offtext
+
 *Display d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
 
 Parameter ProdCap(P,Y);
