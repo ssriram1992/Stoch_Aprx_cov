@@ -137,16 +137,19 @@ def Phi(x,Fx = None, F = None, a=None,free = np.array([]), M = MeritFuncs.minFun
     if free.size > 0:
         ind = np.array([(xx,Fxx,i) for i,xx,Fxx in zip(range(x.size),x,Fx) if not(i in free)])
         temp =  M.phi(ind[:,0],ind[:,1])
-        t2 = np.array(list(temp) + list(Fx[free]))
+        t2 = np.zeros(x.shape)
+        t2[ind[:,2]] = temp
+        t2[free] = Fx[free]
+        # t2 = np.array(list(temp) + list(Fx[free]))
     else:
         t2 = M.phi(x,Fx)
     return t2
 
 def grad_Phi(x,Fx = None, F = None, a=None, free = np.array([]), dF = None, M = MeritFuncs.minFunc(),sparsed=0):
     J = np.zeros((x.size,x.size))
-    if Fx == None:
+    if Fx is None:
         Fx = F(x,a)
-    if dF == None:
+    if dF is None:
         dF = VecNumGrad(F,x,a)
     ind = np.array([(xx,Fxx,int(i)) for i,xx,Fxx in zip(range(x.size),x,Fx) if not(i in free)])
     if free.size > 0:
@@ -156,27 +159,30 @@ def grad_Phi(x,Fx = None, F = None, a=None, free = np.array([]), dF = None, M = 
             J[free,:] = dF[free,:]
     J = sp.sparse.dok_matrix(J)
     for xx,Fxx,i in ind:
-        J[i,:] = M.dphi(xx,Fxx,dF=dF[int(i),:],k=i,sparsed = sparsed)
+        if np.isclose(xx, 0, tol()) and np.isclose(Fxx, 0, tol()):
+            J[i,:] = 0
+        else:
+            J[i,:] = M.dphi(xx,Fxx,dF=dF[int(i),:],k=i,sparsed = sparsed)
     return J
 
 def grad_f(x,Fx = None, F = None, a=None, dF = None,Phix = None,J = None,free = np.array([]), M = MeritFuncs.minFunc()):
-    if np.any(Phix==None):
-        if np.all(Fx == None):
+    if Phix is None:
+        if Fx is None:
             Fx = F(x,a)
         Phix = Phi(x,Fx,free=free,M=M,a=a)
-    if np.all(J == None):
+    if J is None:
         J = grad_Phi(x,Fx,F,a, free,dF,M).T
     return(J.dot(Phix))
 
 def hess_f(x,Fx = None, F = None, a=None, dF = None, ddF =None, J = None, 
             Jtrans = None, Phix=None, free = np.array([]), M = MeritFuncs.minFunc(), sparsed = 0):
-    if np.any(Phix==None):
-        if np.all(Fx == None):
+    if (Phix is None):
+        if (Fx  is  None):
             Fx = F(x,a)
         Phix = Phi(x,Fx,free=free,M=M,a=a)
-    if np.all(J == None):
+    if (J  is  None):
         J = grad_Phi(x,Fx,F,a,free,dF,M)
-    if np.any(Jtrans==None):
+    if (Jtrans is None):
         Jtrans = J.T
     JtJ = Jtrans.dot(J)
     # if sparsed:

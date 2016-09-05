@@ -450,9 +450,9 @@ def freevar():
             np.zeros((Arcs.size(),Years())).flatten(),               #E1_7a
             np.zeros((Arcs.size(),Years())).flatten(),               #E1_7b
             np.zeros((Arcs.size(),Years())).flatten(),               #E1_7c
-            np.ones((Arcs.size(),Years())).flatten(),                #E1_8
+            np.zeros((Arcs.size(),Years())).flatten(),                #E1_8
             # Consumer
-            np.ones((Cons(),Years())).flatten()                      #E1_9
+            np.zeros((Cons(),Years())).flatten()                      #E1_9
             ))
     return np.where(ff)[0]
 

@@ -54,7 +54,7 @@ CAPpy.L(P,Y) = Qp0(P);
 Qpy.L(P,Y) = CAPpy.L(P,Y)*avl*0.99;
 Parameter Qcy(C,Y) "Consumed Quantity";
 
-$If exist ./auxi/loadpoint.gdx %no_init% execute_loadpoint './auxi/loadpoint2.gdx' d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
+$If exist ./auxi/loadpoint.gdx %no_init% execute_loadpoint './auxi/loadpoint.gdx' d1.L,d2.L,d3.L,d4.L,Qpcny.L,Xpy.L,Qpay.L,Qpy.L,CAPpy.L,d5.L,d6.L,Qay.L,Xay.L,CAPay.L,PIay.L,PIcy.L;
 
 
 
