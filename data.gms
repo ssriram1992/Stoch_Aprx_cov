@@ -76,7 +76,7 @@ CAPay(N0,NN0,Y) "Capacity of a in year y"
 ;
 
 * Prices - Variables
-Variables
+Positive Variables
 PIcy(C,Y) "Price for consumer c in year y",
 PIay(N0,NN0,Y) "Price for arc a in year y"
 ;
@@ -485,10 +485,10 @@ E1_7a(N0,NN0,Y)$(Ao(N0,NN0)).. -df(Y)*PIay(N0,NN0,Y) + CostA(N0,NN0,Y)+d5(N0,NN0
 E1_7b(N0,NN0,Y)$(Ao(N0,NN0)).. df(Y)*PIXA(N0,NN0,Y) - sum(Y0$(ORD(Y0) <= ORD(Y)),d6(N0,NN0,Y0)) =g= 0;
 E1_7c(N0,NN0,Y)$(Ao(N0,NN0)).. d6(N0,NN0,Y)-d5(N0,NN0,Y) =g= 0;
 
-E1_8(N0,NN0,Y)$(Ao(N0,NN0)).. Qay(N0,NN0,Y) =e= sum(P,Qpay(P,N0,NN0,Y));
+E1_8(N0,NN0,Y)$(Ao(N0,NN0)).. Qay(N0,NN0,Y) =g= sum(P,Qpay(P,N0,NN0,Y));
 
 * Consumer
-E1_9(C,Y).. PIcy(C,Y) =e= DemInt(C,Y) - DemSlope(C,Y)*sum(P,Qpcny(P,C,Y));
+E1_9(C,Y).. PIcy(C,Y) =g= DemInt(C,Y) - DemSlope(C,Y)*sum(P,Qpcny(P,C,Y));
 
 Model Sim_Nangam /
 E1_2a.d1,

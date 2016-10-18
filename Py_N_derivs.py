@@ -10,6 +10,8 @@
 # *******************************************************************************
 
 
+from NumStochComp import *
+
 def VecNumGrad(F,x,a=None, epsilon = epsilon(), diff = 0, Fx = None):
     if(Fx is None):
         Fx = F(x,a)

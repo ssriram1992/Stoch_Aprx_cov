@@ -132,13 +132,13 @@ def f(x,Fx = None, F = None, a=None,free = np.array([]), M = MeritFuncs.minFunc(
     return Phix.T.dot(Phix)*0.5
 
 def Phi(x,Fx = None, F = None, a=None,free = np.array([]), M = MeritFuncs.minFunc()):
-    if np.all(Fx == None):
+    if (Fx is None):
         Fx = F(x,a)
     if free.size > 0:
         ind = np.array([(xx,Fxx,i) for i,xx,Fxx in zip(range(x.size),x,Fx) if not(i in free)])
         temp =  M.phi(ind[:,0],ind[:,1])
         t2 = np.zeros(x.shape)
-        t2[ind[:,2]] = temp
+        t2[ind[:,2].astype(int)] = temp
         t2[free] = Fx[free]
         # t2 = np.array(list(temp) + list(Fx[free]))
     else:
@@ -215,9 +215,9 @@ def hess_f(x,Fx = None, F = None, a=None, dF = None, ddF =None, J = None,
     return JtJ
 
 def jacob_Phi(x,Fx = None, F = None, a=None, dFa = None, free = np.array([]), M = MeritFuncs.minFunc(),sparsed=0):
-    if np.any(Fx==None):
+    if Fx is None:
         Fx = F(x)
-    if np.all(dFa==None):
+    if dFa is None:
         dFa = VecNumRandGrad(F,x,a)
     N = x.shape
     A = a.shape
@@ -237,11 +237,11 @@ def jacob_Phi(x,Fx = None, F = None, a=None, dFa = None, free = np.array([]), M 
 
 
 def jacob_f(x,Fx = None, F = None, a=None, J_Phi=None, dF=None, dFa = None, free = np.array([]), M = MeritFuncs.minFunc()):
-    if np.any(J_Phi==None):
-        if np.any(Fx==None):
+    if J_Phi is None:
+        if Fx is None:
             Fx = F(x)
         J_Phi = jacob_Phi(x,Fx,F,a,dFa,free,M)  # N x A
-    if np.any(dF==None):
+    if dF is None:
         dF = grad_Phi(x,Fx,F=F,a=a,free=free,M=M)                  # N x N
     N = dF.shape[0]
     return dF.T.dot(J_Phi)

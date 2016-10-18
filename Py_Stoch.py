@@ -77,6 +77,7 @@ FB = MeritFuncs.FischerBurmeister()
 # This should be zero
 f(xstar,Fx, free=free)
 
+
 pr = 1
 
 
@@ -138,9 +139,12 @@ if pr:
 
 
 Hu,Hs,Hv = np.linalg.svd(H)
+np.savetxt('Hu.csv', Hu)
+np.savetxt('Hs.csv', Hs)
+np.savetxt('Hv.csv', Hv)
 T_svd = np.zeros((Number_of_Parameters,Number_of_Variables))
-# 11831 is the index of largest non-zero element in the Hs array
-for i in np.arange(11832):
+# 8615 is the index of largest non-zero element in the Hs array
+for i in np.arange(8615):
     sys.stdout.flush()
     print i,
     T_svd += np.outer(Hu[i,:].T.dot(fJ), Hv[i,:])/Hs[i]
@@ -148,11 +152,18 @@ for i in np.arange(11832):
 np.savetxt('T_svd_full.csv', T_svd)
 
 T_svds = T_svd.copy()
-for i in np.arange(10873,11832):
+for i in np.arange(8251,8615):
     sys.stdout.flush()
     print i,    
     T_svds -= np.outer(Hu[i,:].T.dot(fJ), Hv[i,:])/Hs[i]
 
+T_svds2 = T_svds.copy()
+for i in np.arange(5850,8251):
+    sys.stdout.flush()
+    print i,    
+    T_svds2 -= np.outer(Hu[i,:].T.dot(fJ), Hv[i,:])/Hs[i]
+
+T_svds = T_svds.T
 for i in np.arange(10873,11000):
     sys.stdout.flush()
     print i,
