@@ -121,6 +121,62 @@ def rand_Tex1(Cov):
 
 
 
+vdf         =   (df)*0
+vDemSlope   =   (DemSlope)*0
+vDemInt     =   (DemInt)*0
+vCostP      =   (CostP)*0
+vCostQ      =   (CostQ)*0
+vCostG      =   (CostG)*0
+vCostA      =   (CostA)*0
+vPIXP       =   (PIXP)*0
+vPIXA       =   (PIXA)*0
+vLossP      =   (LossP)*0
+vLossA      =   (LossA)*0
+C3p = np.diag(np.concatenate((
+    vdf.flatten(),
+    vDemSlope.flatten(),
+    vDemInt.flatten(),
+    vCostP.flatten(),
+    vCostQ.flatten(),
+    vCostG.flatten(),
+    vCostA.flatten(),
+    vPIXP.flatten(),
+    vPIXA.flatten(),
+    vLossP.flatten(),
+    vLossA.flatten()
+    )))
+
+def Wiener_cov(vari):
+    v = np.diag(vari)
+    for i in np.arange(vari.shape[0]):
+        for j in np.arange(i):
+            v[i,j]=v[j,i] = min(vari[i],vari[j])
+    return v
+
+StochA = StochGams2Py(df,DemSlope,DemInt,CostP,CostQ,CostG,CostA,PIXP,PIXA,LossP,LossA)
+
+factor = 0.01
+sd_ref = np.sqrt(np.array([
+    0,   # 2010
+    0,   # 2015
+    1,   # 2020
+    2,   # 2025
+    3,   # 2030
+    4,   # 2035
+    5    # 2040
+    ]))*factor
+
+for i in np.arange(427,518,7):
+    temp = 0.1   
+    if i==497:
+        temp = 0.5
+    sd = temp*sd_ref*np.min(StochA[i:i+7])
+    vartemp = Wiener_cov(sd*sd)
+    C3p[i:i+7,i:i+7] = vartemp
+
+
+
+
 ### Section end
 
 
@@ -129,7 +185,7 @@ xk = xstar.copy()
 # ak = StochA.copy()
 step = 0.01
 count = 0
-Cov = Cov_Tex1()
+Cov = C3p
 
 for i in np.arange(25):
 	count = count+1
