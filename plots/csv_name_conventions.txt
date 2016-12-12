@@ -1,0 +1,14 @@
+Note:
+1. By default all variance in 2010 and 2015 are omitted. This is because a change suggested in past years basically tampers the calibration.
+2. Every file-name has at least three parts. For example, v_Qpy_c1. The three parts are "v", "Qpy", "c1". 
+3. First part says if it is a variance matrix (v) or covariance matrix (c). 
+4. Second part says the quantity that we are looking at.
+5. Last part mentions the scenario under which this is obtained.
+6. In the said example, each element is the "variance" of the "produced quantity in each year", under "case 1".
+7. There can be more parts between the second and last part, giving more details about the quantity being described. For example "c_Qpy_Y2020_c1" represents covariance between produced quantities in 2020 under scenario 1.
+
+Explanation of scenario
+Scenario 1:
+Weiner process on Golembek parameter of Texas production cost. 
+mu(t) is calibrated. sigma(t) is 5% of minimum of Golembek parameter. 
+Each time period is unit time for Weiner process

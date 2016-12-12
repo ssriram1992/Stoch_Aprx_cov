@@ -41,6 +41,7 @@ Fx = F(xstar,a=StochA)
     e1_8,e1_9)                 = varPy2Gams(Fx)
 
 
+
 free = freevar()
 
 def Allgood():
@@ -139,28 +140,50 @@ if pr:
 
 
 Hu,Hs,Hv = np.linalg.svd(H)
-np.savetxt('Hu.csv', Hu)
-np.savetxt('Hs.csv', Hs)
-np.savetxt('Hv.csv', Hv)
+np.savetxt('Hu_Sep5.csv', Hu)
+np.savetxt('Hs_Sep5.csv', Hs)
+np.savetxt('Hv_Sep5.csv', Hv)
 T_svd = np.zeros((Number_of_Parameters,Number_of_Variables))
-# 8615 is the index of largest non-zero element in the Hs array
-for i in np.arange(8615):
+T_svd2 = np.zeros((Number_of_Parameters,Number_of_Variables))
+
+fJ = np.genfromtxt('J_Set5.csv')
+Hu = np.genfromtxt('Hu_Sep5.csv')
+Hs = np.genfromtxt('Hs_Sep5.csv')
+Hv = np.genfromtxt('Hv_Sep5.csv')
+
+lim = 1e-7
+RankApprox = Number_of_Variables-np.where(np.abs(Fx[np.where(np.abs(xstar)<lim)])<lim)[0].shape[0]
+# RankApprox is the index of largest non-zero element in the Hs array
+
+
+for i in np.arange(RankApprox):
     sys.stdout.flush()
     print i,
     T_svd += np.outer(Hu[i,:].T.dot(fJ), Hv[i,:])/Hs[i]
 
-np.savetxt('T_svd_full.csv', T_svd)
+np.savetxt('T_svd_full.csv', T_svd)  
+
+
+# The below is Tt_Oct18.csv
+for i in np.arange(RankApprox):
+    sys.stdout.flush()
+    print i,
+    T_svd2 += np.outer(Hu[:,i].T.dot(fJ), Hv[:,i])/Hs[i]
+
+np.savetxt("Tt_Oct18.csv",T_svd2)
+
+
 
 T_svds = T_svd.copy()
 for i in np.arange(8251,8615):
     sys.stdout.flush()
-    print i,    
+    print i,
     T_svds -= np.outer(Hu[i,:].T.dot(fJ), Hv[i,:])/Hs[i]
 
 T_svds2 = T_svds.copy()
 for i in np.arange(5850,8251):
     sys.stdout.flush()
-    print i,    
+    print i,
     T_svds2 -= np.outer(Hu[i,:].T.dot(fJ), Hv[i,:])/Hs[i]
 
 T_svds = T_svds.T

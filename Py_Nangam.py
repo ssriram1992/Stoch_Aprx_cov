@@ -1,4 +1,4 @@
-# *******************************************************************************
+ # *******************************************************************************
 # Author: Sriram Sankaranarayanan
 # File: Oligopoly6.py
 # Institution: Johns Hopkins University
@@ -311,11 +311,12 @@ def varGams2py(d1,d2,d3,Qpcny,Qpsny,Xpy,Qpay,Qpy,CAPpy,d5,d6,Qsny,Xsy,CAPsy,PIsy
         ))
     return x
 
-def StochGams2Py(df = df,
-    DemSlope = DemSlope,DemInt = DemInt,
-    CostP = CostP,CostQ = CostQ,CostG = CostG,CostA = CostA,
-    PIXP = PIXP,PIXA = PIXA,
-    LossP = LossP,LossA = LossA):
+
+def StochGams2Py(df,
+    DemSlope,DemInt,
+    CostP,CostQ,CostG,CostA,
+    PIXP,PIXA,
+    LossP,LossA):
     return np.concatenate((
             df.flatten(),
             DemSlope.flatten(),DemInt.flatten(),

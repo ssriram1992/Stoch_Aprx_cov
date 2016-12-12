@@ -17,7 +17,7 @@ Hv = np.genfromtxt('Hv_Sep5.csv')
 Hs = np.genfromtxt('Hs_Sep5.csv')
 
 
-np.set_printoptions(precision=3,linewidth = 100,formatter = {'all':lambda x: '%10.2f' % x})
+np.set_printoptions(precision=3,linewidth = 200,formatter = {'all':lambda x: '%10.2f' % x})
 
 T = np.genfromtxt('T_testvals.csv',delimiter=',')
 
@@ -55,7 +55,9 @@ fi.close()
 del fi
 
 cx = clean_x(xstar)
-StochA = StochGams2Py()
+StochA = StochGams2Py(df,DemSlope,DemInt,CostP,CostQ,CostG,CostA,PIXP,PIXA,LossP,LossA)
+
+Tt = T_svd2.T.copy()
 
 Tt = T.copy()
 Tt = T_svds.copy()
@@ -68,7 +70,7 @@ T_small = np.concatenate((np.array([np.sum(
     Tt[np.array([ np.arange(i*Cons()*Years(),i*Cons()*Years()+Years()) for i in np.arange(Prod())])+j*Years(),:],axis = 0
     ) for j in np.arange(Cons())]).reshape(Cons()*Years(),Number_of_Parameters),Tt[Prod()*Cons()*Years():,:]),axis=0)
 # T_small[118,:] = T_small[118,:]/10
-
+np.savetxt("T_SmallOct18.csv",T_small)
 
 small_x = np.concatenate((np.array([np.sum(
     cx[np.array([ np.arange(i*Cons()*Years(),i*Cons()*Years()+Years()) for i in np.arange(Prod())])+j*Years()],axis = 0
@@ -121,7 +123,7 @@ C2p = np.diag(np.concatenate((
 
 c_pos = 427
 
-StochA = StochGams2Py()
+StochA = StochGams2Py(df,DemSlope,DemInt,CostP,CostQ,CostG,CostA,PIXP,PIXA,LossP,LossA)
 # CostP for Texas starts from c_pos+7*10 to c_pos + 7*11
 sd = np.sqrt(np.array([
     0,        # 2010
@@ -134,20 +136,6 @@ sd = np.sqrt(np.array([
     ]))*np.min(StochA[c_pos+70:c_pos+77])
 
 
-
-
-
-
-# vartemp = np.diag(sd)
-# corrmat = np.zeros(vartemp.shape)
-# for i in np.arange(7):
-#     for j in np.arange(7):
-#         if i==j:
-#             corrmat[i,j] = 1
-#         else:
-#             corrmat[i,j] = max(0,0.6 - np.abs(i-j)*0.1)
-
-# vartemp = corr2cov(corrmat,sd)
 vartemp = Wiener_cov(sd*sd)
 C2p[c_pos+70:c_pos+77,c_pos+70:c_pos+77] = vartemp
 C2v = T_small.dot(C2p).dot(T_small.T)
@@ -182,28 +170,11 @@ for i in np.arange(2,Years()):
 np.savetxt('c_Qpy_Yi_c1.csv', c_Qpy_Yi[2:,:,:].reshape(5*13,13))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-import matplotlib.pyplot as plt
-
 Prods = ['Alaska','E Can','W Can','Mex 2', 'Mex 5', 'Mid Atlantic','S. Atlantic','E.N. Central','E.S. Central','W.N. Central','W.S. Central','Mountain','Pacific']
 
-# Scenario 2: Uncertainty in Mexico Demand
-# No uncertainty in 2010 and 2015.
-# Production costs 10% standard deviation in Mexico, and 50% correlation between Mexican production costs in 2020
-# 2% additional standard deviation every period there after
 
-# Initializing zeros for deterministic parameters
+##### Scenario 3 - uncertainty in all production costs
+
 vdf         =   (df)*0
 vDemSlope   =   (DemSlope)*0
 vDemInt     =   (DemInt)*0
@@ -229,55 +200,105 @@ C3p = np.diag(np.concatenate((
     vLossA.flatten()
     )))
 
-# Now calibrating the Variance for Mexico ie Nodes (3+1) to (7+1) (5 nodes * 7 years)- 35 x 35 Matrix
-sd_I = np.sqrt(np.array([
-        0,        # 2010
-        0,        # 2015
-        1,     # 2020
-        2,     # 2025
-        3,     # 2030
-        4,     # 2035
-        5      # 2040
-    ]))
-
-factor = 0.1 
-
-temp = np.zeros((5,5))
-for i in np.arange(5):
-    for j in np.arange(5):
-        temp[i,j] = np.sqrt((i+1)*(j+1))
 
 
-sd_D = sd_I*factor
+StochA = StochGams2Py(df,DemSlope,DemInt,CostP,CostQ,CostG,CostA,PIXP,PIXA,LossP,LossA)
 
-# sd = (np.repeat(sd, 5,0)*DemInt[3:8,:]).flatten()
+factor = 0.01
+sd_ref = np.sqrt(np.array([
+    0,   # 2010
+    0,   # 2015
+    1,   # 2020
+    2,   # 2025
+    3,   # 2030
+    4,   # 2035
+    5    # 2040
+    ]))*factor
 
-C3p[126+7*7 : 126+8*7, 126+7*7:126+8*7] = Wiener_cov(sd_I*sd_I)
-C3p[7+7*7 : 7+8*7, 7+7*7:7+8*7] = Wiener_cov(sd_D*sd_D)
-C3p[7+7*7+2 : 7+8*7, 126+7*7+2:126+8*7] = temp*factor
-C3p[126+7*7+2 : 126+8*7, 7+7*7+2:7+8*7] = temp*factor
+for i in np.arange(427,518,7):
+    temp = 0.1   
+    if i==497:
+        temp = 0.5
+    sd = temp*sd_ref*np.min(StochA[i:i+7])
+    vartemp = Wiener_cov(sd*sd)
+    C3p[i:i+7,i:i+7] = vartemp
 
+T_small_Iden = np.concatenate((T_small,np.identity(2023)))
 
-C3v = T_small.dot(C3p).dot(T_small.T)
+# C3v = T_small.dot(C3p).dot(T_small.T)
+C3vf = T_small_Iden.dot(C3p).dot(T_small_Iden.T)
+v_Qpy = C3vf[210:301,210:301]
+v_Qcy = C3vf[0:119,0:119]
+v_Qay = C3vf[301:742,301:742]
+v_PIcy = C3vf[1624:1743,1624:1743]
 
-v_Qpy = C3v[210:301,210:301]
-v_Qcy = C3v[0:119,0:119]
-v_Qay = C3v[301:742,301:742]
-v_PIcy = C3v[1624:,1624:]
+cv_Qpy_Gol = np.diag(C3vf[210:301,427:518]).reshape(13,7)
+    
 
+# Variances
+np.sqrt(np.diag(v_Qpy).reshape(Prod(),Years()))
 np.sqrt(np.diag(v_Qcy).reshape(Cons(),Years()))
+np.sqrt(np.diag(v_PIcy).reshape(Cons(),Years()))
 np.concatenate((np.arange(Arcs.size()).reshape(Arcs.size(),1),np.sqrt(np.diag(v_Qay).reshape(Arcs.size(),Years()))[:,2:]),axis=1)
 
 np.concatenate((np.arange(Arcs.size()).reshape(Arcs.size(),1),Qay[:,2:]),axis=1)
 
-np.sqrt(np.diag(v_Qpy).reshape(Prod(),Years()))
 np.sqrt(np.diag(v_PIcy).reshape(Cons(),Years()))
+
+
+temp = np.sqrt(np.diag(v_Qay).reshape(Arcs.size(),Years())) * (1-np.isclose(Qay,0))
+temp2 = np.concatenate((np.arange(Arcs.size()).reshape(Arcs.size(),1),temp[:,2:]),1)[np.where(np.sum(temp,axis=1))[0],:]
+# np.concatenate((np.arange(Arcs.size()).reshape(Arcs.size(),1),np.sqrt(np.diag(v_Qay).reshape(Arcs.size(),Years()))[:,2:]),axis=1)[np.where(np.sum(Qay,axis=1))[0],:]
+np.concatenate((np.arange(Arcs.size()).reshape(Arcs.size(),1),Qay[:,2:]),axis=1)[np.where(np.sum(Qay,axis=1))[0],:]
+temp[np.where(np.sum(temp,axis=1))][:,2:]
+
+
+np.savetxt("./plots/Plots/v_Qpy.csv",(np.sqrt(np.diag(v_Qpy).reshape(Prod(),Years())))[:,2:])
+np.savetxt("./plots/Plots/v_Qcy.csv",(np.sqrt(np.diag(v_Qcy).reshape(Cons(),Years())))[:,2:])
+
+np.savetxt("./plots/Plots/v_PIcy.csv",(np.sqrt(np.diag(v_PIcy).reshape(Cons(),Years()))/PIcy)[:,2:])
+
+# Covariances
+c_Qpy_Pi = np.zeros((Prod(),Years()-2,Years()-2))
+for i in np.arange(Prod()):
+    temp = i*Years()
+    c_Qpy_Pi[i,:,:] = v_Qpy[temp:temp+Years(),temp:temp+Years()][2:,2:]
+
+temp = np.arange(Prod())*Years()
+c_Qpy_Yi = np.zeros((Years(),Prod(),Prod()))
+for i in np.arange(2,Years()):    
+    c_Qpy_Yi[i,:,:] = v_Qpy[temp+i,:][:,temp+i] 
+
+
+np.savetxt('./plots/Plots/Cov_2020.csv',c_Qpy_Yi[2,:,:].reshape(13,13))
+np.savetxt('./plots/Plots/Cov_2025.csv',c_Qpy_Yi[3,:,:].reshape(13,13))
+np.savetxt('./plots/Plots/Cov_2030.csv',c_Qpy_Yi[4,:,:].reshape(13,13))
+np.savetxt('./plots/Plots/Cov_2035.csv',c_Qpy_Yi[5,:,:].reshape(13,13))
+np.savetxt('./plots/Plots/Cov_2040.csv',c_Qpy_Yi[6,:,:].reshape(13,13))
+    
+
+
+
 
 
 
 
 ##### Sensitivity
 B1 = T_small**2
-B2 = np.sum(B1,axis = 0)
-B3 = np.sqrt(B2)*StochA/100
+B2 = np.sum(B1,axis = 0)*StochA/100
+B2 = np.sqrt(B2)*StochA/100
+Sensitivity = np.array([
+np.sum(B2[0:7])/7,
+np.sum(B2[7:126])/119,
+np.sum(B2[126:245])/119,
+np.sum(B2[245:336])/91,
+np.sum(B2[336:427])/91,
+np.sum(B2[427:518])/91,
+np.sum(B2[518:959])/441,
+np.sum(B2[959:1050])/91,
+np.sum(B2[1050:1491])/441,
+np.sum(B2[1491:1582])/91,
+np.sum(B2[1582:2023])/441
+])
+np.savetxt("./files/Sensitivity.csv",Sensitivity)
 
